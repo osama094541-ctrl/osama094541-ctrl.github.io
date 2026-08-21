@@ -27,7 +27,7 @@
 
 <script>
     // تعديل رابط السيرفر ليعمل بشكل صحيح
-    var client = new Paho.MQTT.Client("://hivemq.com", Number(8000), "web_client_" + parseInt(Math.random() * 100, 10));
+var client = new Paho.MQTT.Client("wss://://hivemq.com", "web_client_" + parseInt(Math.random() * 100, 10));
     client.connect({onSuccess:function(){ console.log("Connected to Server"); }});
 
     function sendOrder(action) {
