@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32-S3 Pure AI Chat</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #202123;
+            color: #ececf1;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #444654;
+        }
+        .chat-header {
+            background-color: #343541;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            border-bottom: 1px solid #4d4d4f;
+            color: #10a37f;
+        }
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .chat-bubble {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: right;
+            direction: rtl;
+        }
+        .user-bubble {
+            background-color: #10a37f;
+            align-self: flex-start;
+            color: white;
+            border-bottom-right-radius: 0;
+        }
+        .ai-bubble {
+            background-color: #343541;
+            align-self: flex-end;
+            color: #ececf1;
+            border-bottom-left-radius: 0;
+            border: 1px solid #4d4d4f;
+        }
+        .chat-footer {
+            background-color: #202123;
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        input[type=text] {
+            flex: 1;
+            padding: 14px;
+            background-color: #40414f;
+            border: 1px solid #565869;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            text-align: right;
+            direction: rtl;
+            outline: none;
+        }
+        input[type=text]:focus {
+            border-color: #10a37f;
+        }
+        button {
+            padding: 0 25px;
+            background-color: #10a37f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #1a7f64;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="chat-header">Osama GitHub Cloud AI Port 🚀</div>
+    <div class="chat-body" id="chatBody">
+        <div class="chat-bubble ai-bubble">
+            مرحباً بك في موقعك الشخصي العالمي الموصول بالسحاب! الواجهة متهيئة الآن لإرسال نبضات الحوار مباشرة إلى شريحة الـ ESP32-S3 الخاصة بك. اسألني عن أي شيء الحين!
+        </div>
+    </div>
+    <div class="chat-footer">
+        <input type="text" id="userInput" placeholder="اكتب سؤالك الذكي الحين لقراءة عقل السحاب..." onkeydown="if(event.key === 'Enter') sendMessage()">
+        <button onclick="sendMessage()">إرسال</button>
+    </div>
+</div>
+
+<script>
+    function sendMessage() {
+        var input = document.getElementById('userInput');
+        var text = input.value.trim();
+        if (!text) return;
+
+        var body = document.getElementById('chatBody');
+        
+        // 1. إضافة فقرة المستخدم الفورية للشاشة
+        body.innerHTML += '<div class="chat-bubble user-bubble">' + text + '</div>';
+        body.scrollTop = body.scrollHeight;
+        input.value = '';
+
+        // 2. إرسال الطلب ديناميكياً لعنوان الـ IP الثابت والمستقر للـ ESP32-S3
+        // قمنا بكتابة الرابط كاملاً ليرتبط موقعك العالمي في جيتهاب بالنبضة المحلية للشريحة
+        fetch('http://192.168.4' + encodeURIComponent(text))
+        .then(res => res.text())
+        .then(data => {
+            // 3. عرض رد الذكاء الاصطناعي الحقيقي المستلم من الـ S3
+            body.innerHTML += '<div class="chat-bubble ai-bubble"><b>S3 Brain:</b> ' + data + '</div>';
+            body.scrollTop = body.scrollHeight;
+        })
+        .catch(err => {
+            // في حال عدم اتصال الهاتف بشبكة الشريحة
+            body.innerHTML += '<div class="chat-bubble ai-bubble" style="border-color: #f38ba8; color: #f38ba8;"><b>خطأ اتصال:</b> تأكد من اتصال هاتفك بشبكة الواي فاي الخاصة بالـ ESP32-S3 أولاً لتتمكن من محاورتها!</div>';
+            body.scrollTop = body.scrollHeight;
+        });
+    }
+</script>
+
+</body>
+</html>
