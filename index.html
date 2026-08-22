@@ -225,7 +225,7 @@
         body.scrollTop = body.scrollHeight;
 
         // 3. الاتصال المباشر بعنوان الـ IP الخاص بالشريحة المتصلة بالسحاب
-        fetch('http://192.168.4' + encodeURIComponent(text))
+        fetch('http://192.168.1' + encodeURIComponent(text))
         .then(res => res.text())
         .then(data => {
             var aiBubble = document.getElementById(aiBubbleId);
