@@ -3,34 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32-S3 Pure AI Chat</title>
+    <title>لوحة التحكم بالذكاء الاصطناعي | Osama AI Dashboard</title>
     <style>
+        :root {
+            --bg-color: #1e1e2e;
+            --container-bg: #252538;
+            --header-bg: #11111b;
+            --chat-bg: #181825;
+            --primary-color: #a6e3a1;
+            --user-bubble: #89b4fa;
+            --ai-bubble: #313244;
+            --text-color: #cdd6f4;
+        }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #202123;
-            color: #ececf1;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             padding: 0;
             margin: 0;
             display: flex;
             justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
+
         .container {
             width: 100%;
-            max-width: 700px;
+            max-width: 800px;
+            height: 90vh;
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            background-color: #444654;
+            background-color: var(--container-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border: 1px solid #45475a;
         }
+
         .chat-header {
-            background-color: #343541;
-            padding: 15px;
+            background-color: var(--header-bg);
+            padding: 20px;
             text-align: center;
             font-weight: bold;
-            font-size: 18px;
-            border-bottom: 1px solid #4d4d4f;
-            color: #10a37f;
+            font-size: 20px;
+            border-bottom: 1px solid #45475a;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #a6e3a1;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #a6e3a1;
+        }
+
         .chat-body {
             flex: 1;
             padding: 20px;
@@ -38,82 +71,142 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            background-color: var(--chat-bg);
         }
+
         .chat-bubble {
-            max-width: 80%;
-            padding: 12px 18px;
-            border-radius: 8px;
+            max-width: 75%;
+            padding: 14px 20px;
+            border-radius: 15px;
             font-size: 16px;
-            line-height: 1.5;
+            line-height: 1.6;
             text-align: right;
             direction: rtl;
+            animation: fadeIn 0.3s ease-in-out;
         }
+
         .user-bubble {
-            background-color: #10a37f;
+            background-color: var(--user-bubble);
             align-self: flex-start;
-            color: white;
+            color: #11111b;
             border-bottom-right-radius: 0;
+            font-weight: 500;
         }
+
         .ai-bubble {
-            background-color: #343541;
+            background-color: var(--ai-bubble);
             align-self: flex-end;
-            color: #ececf1;
+            color: var(--text-color);
             border-bottom-left-radius: 0;
-            border: 1px solid #4d4d4f;
+            border: 1px solid #45475a;
         }
+
         .chat-footer {
-            background-color: #202123;
+            background-color: var(--header-bg);
             padding: 20px;
             display: flex;
             gap: 10px;
+            border-top: 1px solid #45475a;
         }
+
         input[type=text] {
             flex: 1;
-            padding: 14px;
-            background-color: #40414f;
-            border: 1px solid #565869;
-            border-radius: 5px;
+            padding: 15px;
+            background-color: #313244;
+            border: 1px solid #45475a;
+            border-radius: 8px;
             color: white;
             font-size: 16px;
             text-align: right;
             direction: rtl;
             outline: none;
+            transition: border 0.2s;
         }
+
         input[type=text]:focus {
-            border-color: #10a37f;
+            border-color: var(--primary-color);
         }
+
         button {
-            padding: 0 25px;
-            background-color: #10a37f;
-            color: white;
+            padding: 0 30px;
+            background-color: var(--primary-color);
+            color: #11111b;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-weight: bold;
             font-size: 16px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: transform 0.1s, background 0.2s;
         }
+
         button:hover {
-            background-color: #1a7f64;
+            background-color: #94e2d5;
+            transform: scale(1.02);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="chat-header">Osama GitHub Cloud AI Port 🚀</div>
+    <div class="chat-header">
+        <div class="status-dot"></div>
+        Osama AI Cloud Dashboard v4.5 🚀
+    </div>
     <div class="chat-body" id="chatBody">
-        <div class="chat-bubble ai-bubble">
-            مرحباً بك في موقعك الشخصي العالمي الموصول بالسحاب! الواجهة متهيئة الآن لإرسال نبضات الحوار مباشرة إلى شريحة الـ ESP32-S3 الخاصة بك. اسألني عن أي شيء الحين!
+        <div class="chat-bubble ai-bubble" id="welcomeBubble">
+            مرحباً بك في لوحة تحكمك العالمية! المنظومة متصلة بالسحاب عتادياً الآن. اسألني عن أي موضوع في التاريخ أو العلوم، وسأقوم بمعالجته عبر الـ S3 ونطقه صوتياً فوراً!
         </div>
     </div>
     <div class="chat-footer">
-        <input type="text" id="userInput" placeholder="اكتب سؤالك الذكي الحين لقراءة عقل السحاب..." onkeydown="if(event.key === 'Enter') sendMessage()">
+        <input type="text" id="userInput" placeholder="اسأل ذكاء السحاب الحين..." onkeydown="if(event.key === 'Enter') sendMessage()">
         <button onclick="sendMessage()">إرسال</button>
     </div>
 </div>
 
 <script>
+    // دالة نطق النصوص باللغة العربية (Text-to-Speech)
+    function speakText(text) {
+        // تنظيف النص من أكواد الـ HTML لكي لا ينطقها المتصفح بالخطأ
+        var cleanText = text.replace(/<[^>]*>/g, '');
+        
+        if ('speechSynthesis' in window) {
+            var utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'ar-SA'; // ضبط اللهجة العربية القياسية
+            utterance.pitch = 1.0;
+            utterance.rate = 1.0; // السرعة الافتراضية للحديث
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    // دالة محاكاة الآلة الكاتبة لطباعة الرد حرفاً بحرف (Typing Effect)
+    function typeEffect(element, text, speed, callback) {
+        let i = 0;
+        element.innerHTML = "<b>S3 Brain: </b>";
+        
+        function typing() {
+            if (i < text.length) {
+                // إذا واجه النص علامة كسر السطر المجهزة من الشريحة <br>
+                if (text.substr(i, 4) === "<br>") {
+                    element.innerHTML += "<br>";
+                    i += 4;
+                } else {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                }
+                document.getElementById('chatBody').scrollTop = document.getElementById('chatBody').scrollHeight;
+                setTimeout(typing, speed);
+            } else {
+                if(callback) callback();
+            }
+        }
+        typing();
+    }
+
     function sendMessage() {
         var input = document.getElementById('userInput');
         var text = input.value.trim();
@@ -121,24 +214,33 @@
 
         var body = document.getElementById('chatBody');
         
-        // 1. إضافة فقرة المستخدم الفورية للشاشة
+        // 1. عرض رسالة المستخدم الفورية
         body.innerHTML += '<div class="chat-bubble user-bubble">' + text + '</div>';
         body.scrollTop = body.scrollHeight;
         input.value = '';
 
-        // 2. إرسال الطلب ديناميكياً لعنوان الـ IP الثابت والمستقر للـ ESP32-S3
-        // قمنا بكتابة الرابط كاملاً ليرتبط موقعك العالمي في جيتهاب بالنبضة المحلية للشريحة
+        // 2. إنشاء فقرة الرد الفارغة المجهزة لاستقبال حركات الآلة الكاتبة
+        var aiBubbleId = 'ai_' + Date.now();
+        body.innerHTML += '<div class="chat-bubble ai-bubble" id="' + aiBubbleId + '"><b>S3 Brain:</b> جاري عبور النبضات الفكرية للسحاب...</div>';
+        body.scrollTop = body.scrollHeight;
+
+        // 3. الاتصال المباشر بعنوان الـ IP الخاص بالشريحة المتصلة بالسحاب
         fetch('http://192.168.4' + encodeURIComponent(text))
         .then(res => res.text())
         .then(data => {
-            // 3. عرض رد الذكاء الاصطناعي الحقيقي المستلم من الـ S3
-            body.innerHTML += '<div class="chat-bubble ai-bubble"><b>S3 Brain:</b> ' + data + '</div>';
-            body.scrollTop = body.scrollHeight;
+            var aiBubble = document.getElementById(aiBubbleId);
+            
+            // تفعيل تأثير الكتابة التفاعلي وتمرير دالة النطق الصوتي التلقائي بمجرد اكتمال السطر
+            typeEffect(aiBubble, data, 25, function() {
+                speakText(data); // الهاتف يتحدث بالرد العربي فوراً!
+            });
         })
         .catch(err => {
-            // في حال عدم اتصال الهاتف بشبكة الشريحة
-            body.innerHTML += '<div class="chat-bubble ai-bubble" style="border-color: #f38ba8; color: #f38ba8;"><b>خطأ اتصال:</b> تأكد من اتصال هاتفك بشبكة الواي فاي الخاصة بالـ ESP32-S3 أولاً لتتمكن من محاورتها!</div>';
-            body.scrollTop = body.scrollHeight;
+            var aiBubble = document.getElementById(aiBubbleId);
+            aiBubble.style.borderColor = "#f38ba8";
+            aiBubble.style.color = "#f38ba8";
+            aiBubble.innerHTML = "<b>خطأ اتصال:</b> الشريحة لم تستجب. تأكد من اتصال الآيفون بشبكة الواي فاي <b>ESP32S3_Real_AI</b> أولاً!";
+            speakText("حدث خطأ في الاتصال، يرجى التحقق من الشبكة");
         });
     }
 </script>
